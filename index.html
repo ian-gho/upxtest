@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag to Move</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        #container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            cursor: grab;
+        }
+
+        #container.grabbing {
+            cursor: grabbing;
+        }
+
+        #content {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            padding: 40px;
+        }
+
+        .box {
+            width: 150px;
+            height: 150px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease;
+            user-select: none;
+        }
+
+        .box:hover {
+            transform: scale(1.05);
+        }
+
+        #info {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #333;
+            z-index: 100;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="content"></div>
+    </div>
+    <div id="info">Click + drag to move around</div>
+
+    <script>
+        const container = document.getElementById('container');
+        const content = document.getElementById('content');
+        let isPressed = false;
+        let startX = 0;
+        let startY = 0;
+        let scrollLeft = 0;
+        let scrollTop = 0;
+
+        // Generate grid of boxes
+        for (let i = 1; i <= 20; i++) {
+            const box = document.createElement('div');
+            box.className = 'box';
+            box.textContent = i;
+            box.style.pointerEvents = 'none';
+            content.appendChild(box);
+        }
+
+        // Mouse down - start dragging
+        container.addEventListener('mousedown', (e) => {
+            isPressed = true;
+            startX = e.pageX - container.offsetLeft;
+            startY = e.pageY - container.offsetTop;
+            scrollLeft = content.offsetLeft;
+            scrollTop = content.offsetTop;
+            container.classList.add('grabbing');
+            container.classList.remove('grab');
+        });
+
+        // Mouse move - drag
+        document.addEventListener('mousemove', (e) => {
+            if (!isPressed) return;
+
+            const x = e.pageX - container.offsetLeft;
+            const y = e.pageY - container.offsetTop;
+
+            const walkX = (x - startX) * 1.5;
+            const walkY = (y - startY) * 1.5;
+
+            content.style.left = (scrollLeft + walkX) + 'px';
+            content.style.top = (scrollTop + walkY) + 'px';
+        });
+
+        // Mouse up - stop dragging
+        document.addEventListener('mouseup', () => {
+            isPressed = false;
+            container.classList.remove('grabbing');
+            container.classList.add('grab');
+        });
+
+        // Mouse leave - stop dragging
+        document.addEventListener('mouseleave', () => {
+            isPressed = false;
+            container.classList.remove('grabbing');
+            container.classList.add('grab');
+        });
+    </script>
+</body>
+</html>
