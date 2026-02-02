@@ -48,12 +48,6 @@
             position: absolute;
             width: 200%;
             height: 200%;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: center;
-            gap: 40px;
-            padding: 40px;
         }
 
         .box {
@@ -97,14 +91,33 @@
         let scrollTop = 0;
         let zoomLevel = 1;
 
-        // Generate grid of boxes
-        for (let i = 1; i <= 20; i++) {
+        // Generate custom box layout: 5 in a row, 1 below middle
+        const boxSize = 150;
+        const gap = 40;
+        const centerX = content.offsetWidth / 2;
+        const centerY = content.offsetHeight / 2;
+        
+        // 5 boxes in a row
+        for (let i = 0; i < 5; i++) {
             const box = document.createElement('div');
             box.className = 'box';
-            box.textContent = i;
+            box.textContent = '';
             box.style.pointerEvents = 'none';
+            box.style.position = 'absolute';
+            box.style.left = (centerX - (5 * boxSize + 4 * gap) / 2 + i * (boxSize + gap)) + 'px';
+            box.style.top = (centerY - boxSize / 2 - (boxSize + gap) / 2) + 'px';
             content.appendChild(box);
         }
+        
+        // 1 box below the middle (3rd) box
+        const boxBelow = document.createElement('div');
+        boxBelow.className = 'box';
+        boxBelow.textContent = '';
+        boxBelow.style.pointerEvents = 'none';
+        boxBelow.style.position = 'absolute';
+        boxBelow.style.left = (centerX - boxSize / 2) + 'px';
+        boxBelow.style.top = (centerY - boxSize / 2 + (boxSize + gap) / 2) + 'px';
+        content.appendChild(boxBelow);}
 
         // Mouse down - start dragging
         container.addEventListener('mousedown', (e) => {
