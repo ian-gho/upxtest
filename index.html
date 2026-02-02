@@ -14,7 +14,7 @@
         body {
             width: 100%;
             height: 100vh;
-            background: #2a2a2a;
+            background: linear-gradient(135deg, #0d1f0d 0%, #1a2e1a 50%, #0a1a0a 100%);
             overflow: hidden;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
@@ -25,7 +25,19 @@
             position: relative;
             overflow: hidden;
             cursor: grab;
-            border: 3px solid #00aa44;
+            border: 3px solid transparent;
+            background: linear-gradient(#0d1f0d, #0d1f0d) padding-box,
+                        linear-gradient(45deg, #00ff66, #00aa44, #00ff88, #00cc55) border-box;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                filter: drop-shadow(0 0 5px #00ff66) drop-shadow(0 0 10px #00aa44);
+            }
+            50% {
+                filter: drop-shadow(0 0 15px #00ff66) drop-shadow(0 0 25px #00aa44) drop-shadow(0 0 35px #00ff88);
+            }
         }
 
         #container.grabbing {
