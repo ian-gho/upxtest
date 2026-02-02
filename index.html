@@ -14,7 +14,7 @@
         body {
             width: 100%;
             height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #2a2a2a;
             overflow: hidden;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
@@ -25,6 +25,7 @@
             position: relative;
             overflow: hidden;
             cursor: grab;
+            border: 3px solid #00aa44;
         }
 
         #container.grabbing {
@@ -64,16 +65,7 @@
         }
 
         #info {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 15px 20px;
-            border-radius: 8px;
-            font-size: 14px;
-            color: #333;
-            z-index: 100;
-            pointer-events: none;
+            display: none;
         }
     </style>
 </head>
@@ -91,6 +83,7 @@
         let startY = 0;
         let scrollLeft = 0;
         let scrollTop = 0;
+        let zoomLevel = 1;
 
         // Generate grid of boxes
         for (let i = 1; i <= 20; i++) {
@@ -138,6 +131,23 @@
             isPressed = false;
             container.classList.remove('grabbing');
             container.classList.add('grab');
+        });
+
+        // Zoom in/out with mouse wheel
+        container.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            
+            const zoomSpeed = 0.1;
+            const oldZoom = zoomLevel;
+            
+            if (e.deltaY < 0) {
+                zoomLevel += zoomSpeed;
+            } else {
+                zoomLevel = Math.max(0.5, zoomLevel - zoomSpeed);
+            }
+            
+            content.style.transform = `scale(${zoomLevel})`;
+            content.style.transformOrigin = '0 0';
         });
     </script>
 </body>
