@@ -133,11 +133,15 @@
             container.classList.add('grab');
         });
 
-        // Zoom in/out with mouse wheel
+        // Zoom in/out with mouse wheel (zoom towards mouse position)
         container.addEventListener('wheel', (e) => {
             e.preventDefault();
             
             const zoomSpeed = 0.1;
+            const rect = container.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+            
             const oldZoom = zoomLevel;
             
             if (e.deltaY < 0) {
@@ -146,8 +150,19 @@
                 zoomLevel = Math.max(0.5, zoomLevel - zoomSpeed);
             }
             
+            const zoomDiff = zoomLevel - oldZoom;
+            
+            // Calculate the offset to keep the mouse position in the same place
+            const offsetX = content.offsetLeft;
+            const offsetY = content.offsetTop;
+            
+            const newOffsetX = offsetX - (mouseX - offsetX) * (zoomDiff / oldZoom);
+            const newOffsetY = offsetY - (mouseY - offsetY) * (zoomDiff / oldZoom);
+            
             content.style.transform = `scale(${zoomLevel})`;
             content.style.transformOrigin = '0 0';
+            content.style.left = newOffsetX + 'px';
+            content.style.top = newOffsetY + 'px';
         });
     </script>
 </body>
